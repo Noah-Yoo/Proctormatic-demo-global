@@ -24,10 +24,20 @@ if (workbox) {
       // 쿼리 파라미터를 제거한 URL을 생성
       const cacheUrl = new URL(url.origin + url.pathname);
       console.log("제거된 url: ", cacheUrl);
+
       event.respondWith(
         caches.match(cacheUrl).then((response) => {
+          if (response) {
+            console.log("캐시에서 응답 반환: ", cacheUrl);
+            return response;
+          } else {
+            console.log("캐시에서 찾지 못함, 네트워크 요청: ", event.request.url);
+            return fetch(event.request);
+          }
           // 캐시된 응답이 있으면 반환, 없으면 네트워크 요청
-          return response || fetch(event.request);
+          // return response || fetch(event.request);
+        }).catch(error => {
+          console.error("캐시 및 네트워크 응답 오류: ", error);
         })
       );
     }
