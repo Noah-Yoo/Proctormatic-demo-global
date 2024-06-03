@@ -1,0 +1,1230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./css/global.css" />
+  <link rel="stylesheet" href="./css/reportSpecificUp.css" />
+  <link rel="stylesheet" href="./css/modal.css" />
+  <link rel="icon" sizes="16x16" href="./img/favicon_16.png" />
+  <link rel="icon" sizes="32x32" href="./img/favicon_32.png" />
+  <link rel="icon" sizes="96x96" href="./img/favicon_96.png" />
+  <script src="./json/reportSpecific/userData.json" type="text/javascript"></script>
+  <script src="./json/reportSpecific/rawUserData.json" type="text/javascript"></script>
+  <script src="./json/reportSpecific/uploaderList.json" type="text/javascript"></script>
+  <script src="./json/reportSpecific/videoURL.json" type="text/javascript"></script>
+  <script src="./json/reportSpecific/settingURL.json" type="text/javascript"></script>
+  <script src="./js/function.js" type="text/javascript"></script>
+  <script src="./js/physical.js" type="text/javascript"></script>
+  <script src="./js/graph.js" type="text/javascript"></script>
+  <title>PROCTORMATIC</title>
+  <script>
+    const reportNumber = location.href.split('?')[1].split("&")[0];
+    const targetNumber = location.href.split('?')[1].split("&")[1];
+    const isRaw = location.href.split('?')[1].split("&")[2];
+    var user
+    if(isRaw === 'true') {
+      user = JSON.parse(JSON.stringify(rawUserData))[reportNumber].report[targetNumber];
+    } else {
+      user = JSON.parse(JSON.stringify(userData))[reportNumber].report[targetNumber];
+    }
+    // var units = JSON.parse(JSON.stringify(uploaderList))[reportNumber].report[targetNumber];
+    var testVideo = JSON.parse(JSON.stringify(videoURL))[reportNumber].report[targetNumber];
+    var settingPhoto = JSON.parse(JSON.stringify(settingURL))[reportNumber].report[targetNumber];
+    // var rawDataState = false; // rawData 보기 버튼
+    var eventListButton = false; // 이벤트 더 보기 버튼
+    var tableFillCount = setTableFillCount(user?.testReport?.history?.table?.length);
+    var graphUnit = setGraphUnit(user?.testReport?.timeline?.testVideoLength);
+    var columnCount = setColumnCount(user?.testReport?.timeline?.testVideoLength, graphUnit);
+    var auto = false;
+    const cheating = user?.testReport?.timetable?.filter(
+      (user) => user?.level === "cheat"
+    );
+    const abnormal = user?.testReport?.timetable?.filter(
+      (user) => user?.level === "abnormal"
+    );
+    var nowPhotoNumber = 1;
+  </script>
+</head>
+<body>
+  <div id="StBody">
+    <div id="bodyBlock">
+      <!-- rawDataModal Start -->
+      <div id='rawDataModal' style='display:none;'>
+        <div class='StModalBackD'></div>
+        <div class='StRawData'>
+          <div class='StModalHeaderD'>Include raw data</div>
+          <div class='bodyBox'>
+            Proctormatic provides access to the original data of all detected events.
+            However, please be cautious when selecting this option, as the unprocessed raw data may include multiple unnecessary events,
+            such as duplicates and false positives.
+          </div>
+          <div class='listBox'>
+            <div style='display:flex;'>
+              <div>※</div>
+              <div style='margin:0 0 0 6px;'>List of data that are subject to change</div>
+            </div>
+            <div style='padding:0 0 0 5px;'>
+              <li>
+                <span>Detail Report</span>
+              </li>
+              <li>
+                <span>Detected Issues</span>
+              </li>
+              <li>
+                <span>Physical / Environmental data</span>
+              </li>
+            </div>
+          </div>
+          <div class='buttonBoxs'>
+            <div
+              class="buttonBox"
+              onclick="rawDataModalButton('CANCEL');"
+            >
+              CANCEL
+            </div>
+            <div
+              class="buttonBox confirmBox"
+              onclick="rawDataModalButton('OK');"
+            >
+              OK
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- rawDataModal End -->
+      <div id="ReSpUp">
+        <!-- PhotoModal Start -->
+        <div id='envirPhotoModal1' style='display:none;'>
+          <div class='StModalBack'></div>
+          <div class='StPhoto'>
+            <div class='mainTitle'>
+              Environment Scans
+              <img
+                src="./img/reportSpecific/greyX.svg"
+                style="cursor: pointer;"
+                alt=""
+                onclick="photoModalCancel('Modal1');"
+              />
+            </div>
+            <div class="bodyPart">
+              <div class="titleBox">
+                <script>
+                  var photoModalList = [settingPhoto?.aroundSetting?.preTestPhoto];
+                  if(photoModalList.length > 1) {
+                    document.write("<div id='titleText'>");
+                      document.write(photoModalList.length);
+                      document.write(". During the session");
+                    document.write("</div>")
+                  }
+                </script>
+              </div>
+              <div class="imgBox">
+                <script>
+                  document.write("<img\
+                    src='"+settingPhoto?.aroundSetting?.preTestPhoto+"'\
+                    alt=''\
+                  />");
+                </script>
+              </div>
+              <script>
+                if(photoModalList.length > 1) {
+                  document.write("<div class='pageNationBox'>");
+                    document.write("<div>");
+                      document.write("<img\
+                        style='cursor:pointer;display:none;'\
+                        src='./img/reportSpecific/arrowLeftWhite.svg'\
+                        alt=''\
+                        onclick='photoModalPageNation(1, this, \""+settingPhoto.aroundSetting.preTestPhoto+"\");';\
+                      />");
+                    document.write("</div>");
+                    document.write("<div>");
+                      document.write(nowPhotoNumber + "/" + photoModalList.length);
+                    document.write("</div>");
+                    document.write("<div>");
+                      document.write("<img\
+                        style='cursor:pointer;'\
+                        src='./img/reportSpecific/arrowRightWhite.svg'\
+                        alt=''\
+                        onclick='photoModalPageNation(2, this, \""+settingPhoto.aroundSetting.preTestPhoto+"\");';\
+                      />");
+                    document.write("</div>");
+                  document.write("</div>");
+                }
+              </script>
+            </div>
+          </div>
+        </div>
+        <div id='envirPhotoModal2' style='display:none;'>
+          <div class='StModalBack'></div>
+          <div class='StPhoto'>
+            <div class='mainTitle'>
+              Environment Scans
+              <img
+                src="./img/reportSpecific/greyX.svg"
+                style="cursor: pointer;"
+                alt=""
+                onclick="photoModalCancel('Modal2');"
+              />
+            </div>
+            <div class="bodyPart">
+              <div class="titleBox">
+                <script>
+                  photoModalList = settingPhoto?.aroundSetting?.reactivateTestPhotos;
+                  if(photoModalList.length > 1) {
+                    document.write("<div id='titleText'>");
+                      document.write(photoModalList.length);
+                      document.write(". During the session");
+                    document.write("</div>")
+                  }
+                </script>
+              </div>
+              <div class="imgBox">
+                <script>
+                  document.write("<img\
+                    src='"+settingPhoto?.aroundSetting?.reactivateTestPhotos[0]+"'\
+                    alt=''\
+                  />");
+                </script>
+              </div>
+              <script>
+                if(photoModalList.length > 1) {
+                  document.write("<div class='pageNationBox'>");
+                    document.write("<div>");
+                      document.write("<img\
+                        style='cursor:pointer;display:none;'\
+                        src='./img/reportSpecific/arrowLeftWhite.svg'\
+                        alt=''\
+                        onclick='photoModalPageNation(1, this, \""+settingPhoto.aroundSetting.reactivateTestPhotos+"\");';\
+                      />");
+                    document.write("</div>");
+                    document.write("<div>");
+                      document.write(nowPhotoNumber + "/" + photoModalList.length);
+                    document.write("</div>");
+                    document.write("<div>");
+                      document.write("<img\
+                        style='cursor:pointer;'\
+                        src='./img/reportSpecific/arrowRightWhite.svg'\
+                        onclick='photoModalPageNation(2, this, \""+settingPhoto.aroundSetting.reactivateTestPhotos+"\");'\
+                        alt=''\
+                      />");
+                    document.write("</div>");
+                  document.write("</div>");
+                }
+              </script>
+            </div>
+          </div>
+        </div>
+        <div id='cameraPhotoModal1' style='display:none;'>
+          <div class='StModalBack'></div>
+          <div class='StPhoto'>
+            <div class='mainTitle'>
+              Environment Scans
+              <img
+                src="./img/reportSpecific/greyX.svg"
+                style="cursor: pointer;"
+                alt=""
+                onclick="photoModalCancel('Modal3');"
+              />
+            </div>
+            <div class="bodyPart">
+              <div class="titleBox">
+                <script>
+                  photoModalList = [settingPhoto?.cameraSetting?.preTestPhoto];
+                  if(photoModalList.length > 1) {
+                    document.write("<div id='titleText'>");
+                      document.write(photoModalList.length);
+                      document.write(". During the session");
+                    document.write("</div>")
+                  }
+                </script>
+              </div>
+              <div class="imgBox">
+                <script>
+                  document.write("<img\
+                    src='"+settingPhoto?.cameraSetting?.preTestPhoto+"'\
+                    alt=''\
+                  />");
+                </script>
+              </div>
+              <script>
+                if(photoModalList.length > 1) {
+                  document.write("<div class='pageNationBox'>");
+                    document.write("<div>");
+                      document.write("<img\
+                        style='cursor:pointer;display:none;'\
+                        src='./img/reportSpecific/arrowLeftWhite.svg'\
+                        alt=''\
+                        onclick='photoModalPageNation(1, this, \""+settingPhoto.cameraSetting.preTestPhoto+"\");';\
+                      />");
+                    document.write("</div>");
+                    document.write("<div>");
+                      document.write(nowPhotoNumber + "/" + photoModalList.length);
+                    document.write("</div>");
+                    document.write("<div>");
+                      document.write("<img\
+                        style='cursor:pointer;'\
+                        src='./img/reportSpecific/arrowRightWhite.svg'\
+                        alt=''\
+                        onclick='photoModalPageNation(2, this, \""+settingPhoto.cameraSetting.preTestPhoto+"\");';\
+                      />");
+                    document.write("</div>");
+                  document.write("</div>");
+                }
+              </script>
+            </div>
+          </div>
+        </div>
+        <div id='cameraPhotoModal2' style='display:none;'>
+          <div class='StModalBack'></div>
+          <div class='StPhoto'>
+            <div class='mainTitle'>
+              Environment Scans
+              <img
+                src="./img/reportSpecific/greyX.svg"
+                style="cursor: pointer;"
+                alt=""
+                onclick="photoModalCancel('Modal4');"
+              />
+            </div>
+            <div class="bodyPart">
+              <div class="titleBox">
+                <script>
+                  photoModalList = settingPhoto?.cameraSetting?.reactivateTestPhotos;
+                  if(photoModalList.length > 1) {
+                    document.write("<div id='titleText'>");
+                      document.write(photoModalList.length);
+                      document.write(". During the session");
+                    document.write("</div>")
+                  }
+                </script>
+              </div>
+              <div class="imgBox">
+                <script>
+                  document.write("<img\
+                    src='"+settingPhoto?.cameraSetting?.reactivateTestPhotos[0]+"'\
+                    alt=''\
+                  />");
+                </script>
+              </div>
+              <script>
+                if(photoModalList.length > 1) {
+                  document.write("<div class='pageNationBox'>");
+                    document.write("<div>");
+                      document.write("<img\
+                        style='cursor:pointer;display:none;'\
+                        src='./img/reportSpecific/arrowLeftWhite.svg'\
+                        alt=''\
+                        onclick='photoModalPageNation(1, this, \""+settingPhoto.cameraSetting.reactivateTestPhotos+"\");'\
+                      />");
+                    document.write("</div>");
+                    document.write("<div>");
+                      document.write(nowPhotoNumber + "/" + photoModalList.length);
+                    document.write("</div>");
+                    document.write("<div>");
+                      document.write("<img\
+                        style='cursor:pointer;'\
+                        src='./img/reportSpecific/arrowRightWhite.svg'\
+                        alt=''\
+                        onclick='photoModalPageNation(2, this, \""+settingPhoto.cameraSetting.reactivateTestPhotos+"\");'\
+                      />");
+                    document.write("</div>");
+                  document.write("</div>");
+                }
+              </script>
+            </div>
+          </div>
+        </div>
+        <!-- PhotoModal End -->
+        <!-- share sendingConfirmModal Start -->
+        <div id='sendingConfirmModal' style='display:none;'>
+          <div class='StModalBackD'></div>
+          <div class='StSendingConfirm'>
+            <div class='StModalHeaderD'>Generate a video URL</div>
+            <div class='wrapper'>
+              <div class='textBox'>The time required to generate a dedicated video URL may vary based on the video's length, but it typically takes at least 1 minute for a 10-minute video.</div>
+              <div class='warningBox'>
+                <div class='warningHeader'>
+                  ※ &nbsp;&nbsp;<span>Notice</span>
+                </div>
+                <div class='warningList'>
+                  <li>The video within the URL can be played for up to 10 minutes.</li>
+                  <li>The generated video URL is valid for 7 days.</li>
+                </div>
+              </div>
+              <div class='buttonBox'>
+                <div 
+                  class="cancelButton"
+                  onclick="confirmButton('CANCEL')"
+                >
+                  Cancel
+                </div>
+                <div class="greyBar"></div>
+                <div 
+                  class="confirmButton"
+                  onclick="confirmButton('CONFIRM')"
+                >
+                  Confirm
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- share sendingConfirmModal End -->
+        <!-- share SendingModal Start -->
+        <div id='sendingModal' style='display:none;'>
+          <div class='StModalBackD'></div>
+          <div class='StSendingVideo'>
+            <div class='StModalHeaderD'>Include raw data</div>
+            <div class='buttonBox'>
+              <div
+                id="text"
+                onclick="sendingCancelButton();"
+              >
+                Copy Link
+              </div>
+              <div onclick='sendingCancelButton();'>Send Email</div>
+            </div>
+            <div 
+              class='cancelButton'
+              onclick='sendingCancelButton();'
+            >
+              Cancel
+            </div>
+          </div>
+        </div>
+        <!-- share SendingModal End -->
+        <div class="body">
+          <div class="upTitle">
+            <div class="flexing">
+              <!-- <img
+                class="arrow"
+                alt=""
+                onclick="javascript:history.back();"
+                src="./img/arrow.svg"
+              /> -->
+              <img
+                id="arrow"
+                class="arrow"
+                alt=""
+                src="./img/arrow.svg"
+              />
+              <span>Report</span>
+            </div>
+            <!-- 시험 유저 변경 인터렉션 삭제 -->
+            <!-- <div class="users">
+            </div> -->
+          </div>
+          <div class="reportContent">
+            <img
+              id="userPhoto"
+              class="userPhoto"
+              alt=""
+            />
+            <div class="testerInformationBox">
+              <div class="eachItemBox">
+                <div class="titlePart">Name</div>
+                <div class="namePart">
+                  <script>document.write(user?.testReport?.uploader?.uploaderName);</script>
+                </div>
+              </div>
+              <div class="eachItemBox">
+                <div class="titlePart">Email Address</div>
+                <!-- <a class="emailPart" href={userMail}> -->
+                <a id="emailPart" class="emailPart">
+                  <script>document.write(user?.testReport?.uploader?.uploaderEmail);</script>
+                </a>
+              </div>
+              <div class="eachItemBox">
+                <div class="titlePart">Location of Access</div>
+                <div class="bodyPart">
+                  <script>document.write(user?.testReport?.uploader?.uploaderLocation);</script>
+                </div>
+              </div>
+              <script>
+                if(user?.testReport?.isTesterSelfExit) {
+                  document.write("<div class='eachItemBox'>");
+                    document.write("<div class='titlePart'>");
+                      document.write("End Date and Time");
+                    document.write("</div>");
+                    document.write("<div class='bodyPart'>");
+                      if(user?.testReport?.uploader?.finishTestTime !== "-") {
+                        document.write(writeTimeFormat(user.testReport.uploader.finishTestTime));
+                        document.write(" (UTC+");
+                        document.write(-(new Date().getTimezoneOffset()) / 60);
+                        document.write(")");
+                      } else {
+                        document.write("- ");
+                      }
+                    document.write("</div>");
+                  document.write("</div>");
+                }
+              </script>
+              <div class="eachItemBox">
+                <div class="titlePart">Video Upload</div>
+                <div class="bodyPart">
+                  <script>
+                    if(user?.testReport?.uploader?.uploadVideoTime !== "-") {
+                      document.write(writeTimeFormat(user.testReport.uploader.uploadVideoTime));
+                      document.write(" (UTC+");
+                      document.write(-(new Date().getTimezoneOffset()) / 60);
+                      document.write(")");
+                    } else {
+                      document.write("- ");
+                    }
+                  </script>
+                </div>
+              </div>
+              <div class="eachItemBox">
+                <div class="titlePart">
+                  Video Tampering
+                </div>
+                <script>
+                  if(user?.testReport?.uploader?.isTamperedVideo === "-") {
+                    document.write("<div class='bodyPart'>");
+                      document.write("-");
+                    document.write("</div>");
+                  } else {
+                    if(user?.testReport?.uploader?.isTamperedVideo === true) {
+                      document.write("<div class='bodyPart' style='color:#C83B38'>");
+                        document.write("Suspected");
+                      document.write("</div>");
+                    } else {
+                      document.write("<div class='bodyPart'>");
+                        document.write("N/A");
+                      document.write("</div>");
+                    }
+                  }
+                </script>
+              </div>
+            </div>
+            <div class="synthesizeOpinionBox">
+              <div class="title">Report Summary</div>
+              <div class="bodyPart">
+                <script>
+                  if(user?.testReport?.conclusion?.check === "cheat") {
+                    document.write("<img class='image' alt='bad' src='./img/reportSpecific/Bad.svg' />");
+                  } else if(user?.testReport?.conclusion?.check === "abnormal") {
+                    document.write("<img class='image' alt='middle' src='./img/reportSpecific/suspicious.svg' />");
+                  } else if(user?.testReport?.conclusion?.check === "normal") {
+                    document.write("<img class='image' alt='good' src='./img/reportSpecific/normal.svg' />");
+                  } else if(user?.testReport?.conclusion?.check === "incompleteTest") {
+                    document.write("<img class='image' alt='good' src='./img/reportSpecific/incompleteTest.svg' />");
+                  } else if(user?.testReport?.conclusion?.check === "uploadNotCompleted") {
+                    document.write("<img class='image' alt='good' src='./img/reportSpecific/uploadNotCompleted.svg' />");
+                  } else if(user?.testReport?.conclusion?.check === "errorCase") {
+                    document.write("<img class='image' alt='error' src='./img/reportSpecific/errorCase.svg' />");
+                  }
+                </script>
+                <div class="talk">
+                  <div class="triangle"></div>
+                  <div class="messageBalloon">
+                    <script>
+                      if(user?.testReport?.status === "tamperedVideo") {
+                        document.write("<div class='mainMessage'>");
+                          document.write("Video tampering detected!");
+                        document.write("</div>");
+                        document.write("<div class='subMessage'>");
+                          document.write("The video appears to be edited and not the original recording. Please contact the test-taker for verification.");
+                        document.write("</div>");
+                        document.write("<div class='notificationMessage'>");
+                          document.write("* See details below");
+                        document.write("</div>");
+                      } else if(user?.testReport?.status === "cheatCameraOffUnverifiedEnv") {
+                        document.write("<div class='mainMessage'>");
+                          document.write("Suspicious Behavior (");
+                          document.write(user?.testReport?.conclusion?.cheatCount);
+                          document.write("), ");
+                          document.write("Camera Turned Off (");
+                          document.write(user?.testReport?.conclusion?.cameraOffCount);
+                          document.write("), ");
+                          document.write("Prohibited item(s) detected!");
+                        document.write("</div>");
+                        document.write("<div class='subMessage'>");
+                          document.write("Review and confirmation of the video is required. Re-evaluate other detected incidents as well.");
+                        document.write("</div>");
+                        document.write("<div class='notificationMessage'>");
+                          document.write("* See details below");
+                        document.write("</div>");
+                      } else if(user?.testReport?.status === "cheatUnverifiedEnv") {
+                        document.write("<div class='mainMessage'>");
+                          document.write("Suspicious Behavior (");
+                          document.write(user?.testReport?.conclusion?.cheatCount);
+                          document.write("), ");
+                          document.write("Prohibited item(s) detected!");
+                        document.write("</div>");
+                        document.write("<div class='subMessage'>");
+                          document.write("Review and confirmation of the video is required. Re-evaluate other detected incidents as well.");
+                        document.write("</div>");
+                        document.write("<div class='notificationMessage'>");
+                          document.write("* See details below");
+                        document.write("</div>");
+                      } else if(user?.testReport?.status === "cheatCameraOff") {
+                        document.write("<div class='mainMessage'>");
+                          document.write("Suspicious Behavior (");
+                          document.write(user?.testReport?.conclusion?.cheatCount);
+                          document.write("), ");
+                          document.write("Camera Turned Off (");
+                          document.write(user?.testReport?.conclusion?.cameraOffCount);
+                          document.write(")");
+                        document.write("</div>");
+                        document.write("<div class='subMessage'>");
+                          document.write("Review and confirmation of the video is required. Re-evaluate other detected incidents as well.");
+                        document.write("</div>");
+                        document.write("<div class='notificationMessage'>");
+                          document.write("* See details below");
+                        document.write("</div>");
+                      } else if(user?.testReport?.status === "unverifiedEnvCameraOff") {
+                        document.write("<div class='mainMessage'>");
+                          document.write("Camera Turned Off (");
+                          document.write(user?.testReport?.conclusion?.cameraOffCount);
+                          document.write("), ");
+                          document.write("Prohibited item(s) detected!");
+                        document.write("</div>");
+                        document.write("<div class='subMessage'>");
+                          document.write("Review and confirmation of the video is required. Re-evaluate other detected incidents as well.");
+                        document.write("</div>");
+                        document.write("<div class='notificationMessage'>");
+                          document.write("* See details below");
+                        document.write("</div>");
+                      } else if(user?.testReport?.status === "unverifiedEnvAbnormal") {
+                        document.write("<div class='mainMessage'>");
+                          document.write("Suspicious Behavior (");
+                          document.write(user?.testReport?.conclusion?.abnormalCount);
+                          document.write("), ");
+                          document.write("Prohibited item(s) detected!");
+                        document.write("</div>");
+                        document.write("<div class='subMessage'>");
+                          document.write("Review and confirmation of the video is required. Re-evaluate other detected incidents as well.");
+                        document.write("</div>");
+                        document.write("<div class='notificationMessage'>");
+                          document.write("* See details below");
+                        document.write("</div>");
+                      } else if(user?.testReport?.status === "unverifiedEnv") {
+                        document.write("<div class='mainMessage'>");
+                          document.write("Prohibited item(s) detected!");
+                        document.write("</div>");
+                        document.write("<div class='subMessage'>");
+                          document.write("Review and confirmation of the video is required. Re-evaluate other detected incidents as well.");
+                        document.write("</div>");
+                        document.write("<div class='notificationMessage'>");
+                          document.write("* See details below");
+                        document.write("</div>");
+                      } else if(user?.testReport?.status === "cameraOffAbnormal") {
+                        document.write("<div class='mainMessage'>");
+                          document.write("Camera Turned Off (");
+                          document.write(user?.testReport?.conclusion?.cameraOffCount);
+                          document.write("), ");
+                          document.write("Suspicious Behavior (");
+                          document.write(user?.testReport?.conclusion?.abnormalCount);
+                          document.write(")");
+                        document.write("</div>");
+                        document.write("<div class='subMessage'>");
+                          document.write("Due to the detection of multiple suspicious behaviors, it is recommended to review the video.");
+                        document.write("</div>");
+                        document.write("<div class='notificationMessage'>");
+                          document.write("* See details below");
+                        document.write("</div>");
+                      } else if(user?.testReport?.status === "cameraOff") {
+                        document.write("<div class='mainMessage'>");
+                          document.write("Camera Turned Off (");
+                          document.write(user?.testReport?.conclusion?.cameraOffCount);
+                          document.write(")");
+                        document.write("</div>");
+                        document.write("<div class='subMessage'>");
+                          document.write("Review and confirmation of the camera turning off are required.");
+                        document.write("</div>");
+                        document.write("<div class='notificationMessage'>");
+                          document.write("* See details below");
+                        document.write("</div>");
+                      } else if(user?.testReport?.status === "cheatUpload") {
+                        document.write("<div class='mainMessage'>");
+                          document.write("Suspicious Behavior (");
+                          document.write(user?.testReport?.conclusion?.cheatCount);
+                          document.write(")");
+                        document.write("</div>");
+                        document.write("<div class='subMessage'>");
+                          document.write("Review and confirmation of the video is required. Re-evaluate other detected incidents as well.");
+                        document.write("</div>");
+                        document.write("<div class='notificationMessage'>");
+                          document.write("* See details below");
+                        document.write("</div>");
+                      } else if(user?.testReport?.status === "abnormalUpload") {
+                        document.write("<div class='mainMessage'>");
+                          document.write("Suspicious Behavior (");
+                          document.write(user?.testReport?.conclusion?.abnormalCount);
+                          document.write(")");
+                        document.write("</div>");
+                        document.write("<div class='subMessage'>");
+                          document.write("Due to the detection of multiple suspicious behaviors, it is recommended to review the video.");
+                        document.write("</div>");
+                        document.write("<div class='notificationMessage'>");
+                          document.write("* See details below");
+                        document.write("</div>");
+                      } else if(user?.testReport?.status === "normalUpload") {
+                        document.write("<div class='mainMessage'>");
+                          document.write("No issues detected!");
+                        document.write("</div>");
+                        document.write("<div class='subMessage'>");
+                          document.write("No review or confirmation needed.");
+                        document.write("</div>");
+                        document.write("<div class='notificationMessage'>");
+                          document.write("* See details below");
+                        document.write("</div>");
+                      } else if(user?.testReport?.status === "normalUploadIncludesAbnormal") {
+                        document.write("<div class='mainMessage'>");
+                          document.write("Suspicious Behavior (");
+                          document.write(user?.testReport?.conclusion?.abnormalCount);
+                          document.write(")");
+                        document.write("</div>");
+                        document.write("<div class='subMessage'>");
+                          document.write("Suspicious behavior has been detected in very limited instances and is considered as normal. A review is recommended if necessary.");
+                        document.write("</div>");
+                        document.write("<div class='notificationMessage'>");
+                          document.write("* See details below");
+                        document.write("</div>");
+                      } else if(user?.testReport?.status === "incompleteTest") {
+                        document.write("<div class='mainMessage'>");
+                          document.write("Recording not completed!");
+                        document.write("</div>");
+                        document.write("<div class='subMessage'>");
+                          document.write("The proctored session started but was either 'abandoned' mid-session or not completed.");
+                        document.write("</div>");
+                        document.write("<div class='timeMessage'>");
+                          document.write("<div>Started at</div>");
+                          document.write("<span>");
+                            document.write(writeTimeFormat(user?.testReport?.conclusion?.startTestTime, "", "", "hh:mm:ss A"));
+                            document.write(" (UTC+");
+                            document.write(-(new Date().getTimezoneOffset()) / 60);
+                            document.write(")");
+                          document.write("</span>");
+                        document.write("</div>");
+                        document.write("<div class='notificationMessage'>");
+                          document.write("* See details below");
+                        document.write("</div>");
+                      } else if(user?.testReport?.status === "errorCase") {
+                        document.write("<div class='mainMessage'>");
+                          document.write("An unknown error occurred during the analysis!");
+                        document.write("</div>");
+                        document.write("<div class='subMessage'>");
+                          document.write("The proctored session, recording, and video upload have been completed successfully, but an unknown error occurred during the analysis. Please contact our customer support, and we will promptly assist you.");
+                        document.write("</div>");
+                        document.write("<div class='timeMessage'>");
+                          document.write("<div>Started at</div>");
+                          document.write("<span>");
+                            document.write(writeTimeFormat(user?.testReport?.conclusion?.startTestTime, "", "", "hh:mm:ss A"));
+                            document.write(" (UTC+");
+                            document.write(-(new Date().getTimezoneOffset()) / 60);
+                            document.write(")");
+                          document.write("</span>");
+                        document.write("</div>");
+                        document.write("<div class='notificationMessage'>");
+                          document.write("* See details below");
+                        document.write("</div>");
+                      }
+                    </script>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Detail Report Start -->
+            <script>
+              if(user?.testReport?.status !== "incompleteTest" &
+                user?.testReport?.status !== "uploadNotCompleted" &
+                user?.testReport?.status !== "errorCase") {
+                  document.write("<div class='detectedEventBox'>");
+                    document.write("<div class='title'>");
+                      document.write("Detail Report");
+                    document.write("</div>");
+                    document.write("<div class='bodyPart'>");
+                      document.write("<div class='total'>");
+                        document.write("<div class='inside'>");
+                          document.write("<div class='what'>");
+                            document.write("<div style='margin: auto 0 0;'>");
+                              document.write("Total Issues");
+                            document.write("</div>");
+                          document.write("</div>");
+                          document.write("<div class='down'>");
+                            document.write(" ");
+                            document.write("<span class='num'>");
+                              document.write(user?.testReport?.history?.summary?.totalEventCount);
+                            document.write("</span> ");
+                          document.write("</div>");
+                        document.write("</div>");
+                        document.write("<div class='inside'>");
+                          document.write("<div class='what'>");
+                            document.write("<div class='circleRed'></div>");
+                            document.write("<div>");
+                              document.write(" Urgent");
+                            document.write("</div>");
+                          document.write("</div>");
+                          document.write("<div class='down'>");
+                            document.write(" ");
+                            document.write("<span class='num'>");
+                              document.write(user?.testReport?.history?.summary?.cheatEventCount);
+                            document.write("</span> ");
+                          document.write("</div>");
+                        document.write("</div>");
+                        document.write("<div class='inside'>");
+                          document.write("<div class='what'>");
+                            document.write("<div class='circleYellow'></div>");
+                            document.write("<div>");
+                              document.write(" Urgent");
+                            document.write("</div>");
+                          document.write("</div>");
+                          document.write("<div class='down'>");
+                            document.write(" ");
+                            document.write("<span class='num'>");
+                              document.write(user?.testReport?.history?.summary?.abnormalEventCount);
+                            document.write("</span> ");
+                          document.write("</div>");
+                        document.write("</div>");
+                      document.write("</div>");
+                      document.write("<div class='bodyRight'>");
+                        // rawData 보기 onclick 만들어야함
+                        document.write("<div class='rawDataLine'>");
+                          if(isRaw === 'true') {
+                            document.write("<div class='rawDataCheckBox rawCheck' onclick=rawDataCheck('checked');>");
+                              document.write("<img src='./img/reportSpecific/white_ch.svg' alt='' />");
+                          } else {
+                            document.write("<div class='rawDataCheckBox' onclick=rawDataCheck('unchecked');>");
+                          }
+                          document.write("</div>");
+                          document.write("Include raw data");
+                        document.write("</div>");
+                        document.write("<div class='eventTable'>");
+                          document.write("<div class='tableHeader'>");
+                            document.write("<div>");
+                              document.write("Urgent / Recommended");
+                            document.write("</div>");
+                            document.write("<div class='accCount'>");
+                              document.write("Freq");
+                            document.write("</div>");
+                            document.write("<div style='text-align: center;'>");
+                              document.write("Dur (sec)");
+                            document.write("</div>");
+                          document.write("</div>");
+                          document.write("<div class='tableMargin'>");
+                            document.write("<div> </div>");
+                            document.write("<div class='accCount'> </div>");
+                            document.write("<div> </div>");
+                          document.write("</div>");
+                          if(user?.testReport?.history?.table?.length > 0) {
+                            user?.testReport?.history?.table?.map((value, index) => {
+                              if(index > 2 & !eventListButton) {
+                                document.write("<div class='StEventTable' style='display:none;'>");
+                              } else {
+                                document.write("<div class='StEventTable'>");
+                              }
+                                document.write("<div class='tableSort'>");
+                                  if(value?.level === "cheat") {
+                                    document.write("<div class='tableLevel cheat'></div>");
+                                  } else if(value?.level === "abnormal") {
+                                    document.write("<div class='tableLevel abnormal'></div>");
+                                  }
+                                  document.write("<div class='tableText'>");
+                                    document.write(value?.sort);
+                                  document.write("</div>");
+                                document.write("</div>");
+                                document.write("<div class='tableAccCount'>");
+                                  document.write(value?.accCount);
+                                document.write("</div>");
+                                document.write("<div class='tableAccDuration'>");
+                                  document.write(Math.floor(value?.accDuration));
+                                document.write("</div>");
+                              document.write("</div>");
+                            });
+                          } else {
+                            document.write("<div class='noEvent'>");
+                              document.write("<div style='font-size: 13px; color: #BDBDBD;'>");
+                                document.write("No issues detected!");
+                              document.write("</div>");
+                              document.write("<div class='middleCount'>-</div>");
+                              document.write("<div>-</div>");
+                            document.write("</div>");
+                          }
+                          document.write("<div class='tableMargin'>");
+                            document.write("<div> </div>");
+                            document.write("<div class='accCount'> </div>");
+                            document.write("<div> </div>");
+                          document.write("</div>");
+                          if(user?.testReport?.history?.table?.length < 4 &
+                          user?.testReport?.history?.table?.length > 0) {
+                            document.write("<div>");
+                              tableFillCount?.map((value, index) => {
+                                document.write("<div class='fillEvent' key="+index+">");
+                                  document.write("<div></div>");
+                                  document.write("<div class='middleCount'></div>");
+                                  document.write("<div></div>");
+                                document.write("</div>");
+                              });
+                            document.write("</div>");
+                          }
+                          if(!eventListButton & user?.testReport?.history?.table?.length > 3) {
+                            document.write("<div\
+                            id='tableshowMore'\
+                            class='tableShowMore'\
+                            onclick='showMore(this)'\
+                            >");
+                              document.write("<div class='eventMore'>");
+                                document.write("View more");
+                              document.write("</div>");
+                              document.write("<div class='accCount'></div>");
+                              document.write("<div></div>");
+                            document.write("</div>");
+                          }
+                        document.write("</div>");
+                      document.write("</div>");
+                    document.write("</div>");
+                  document.write("</div>");
+                }
+            </script>
+            <!-- Detail Report End -->
+            <!-- Detected Issues Start -->
+            <script>
+              if(user?.testReport?.status !== "incompleteTest" &
+                user?.testReport?.status !== "uploadNotCompleted" &
+                user?.testReport?.status !== "errorCase") {
+                  document.write("<div class='detectedVideoBox'>");
+                    document.write("<div class='title'>");
+                      document.write("<div>");
+                        document.write("Detected Issues");
+                      document.write("</div>");
+                    document.write("</div>");
+                    document.write("<div class='timeLinePart'>");
+                      document.write("<div class='timeLineInfo'>");
+                        document.write("<div>");
+                          document.write("Timeline");
+                        document.write("</div>");
+                        document.write("<div class='rightInfo'>");
+                          document.write("<div class='infoItemForm'>");
+                            document.write("<div class='circle' style='background: #C83B38;'></div>");
+                            document.write("<div>");
+                              document.write("Urgent");
+                            document.write("</div>");
+                          document.write("</div>");
+                          document.write("<div class='infoItemForm'>");
+                            document.write("<div class='circle' style='background: #FFBC00;'></div>");
+                            document.write("<div>");
+                              document.write("Recommended");
+                            document.write("</div>");
+                          document.write("</div>");
+                        document.write("</div>");
+                      document.write("</div>");
+                      document.write("<div class='timeLineGraphInfo'>");
+                        document.write("<div class='fromStartToEnd'>");
+                          document.write("<div>");
+                            document.write(writeTimeFormat(user?.testReport?.timeline?.testStartTime, "", "", "A hh:mm"));
+                          document.write("</div>");
+                          document.write("<div>");
+                            document.write(writeTimeFormat(user?.testReport?.timeline?.testEndTime, "", "", "A hh:mm"));
+                          document.write("</div>");
+                        document.write("</div>");
+                        document.write("<div class='barGraph'>");
+                          document.write("<div class='unitBarPart'>");
+                            columnCount?.map((value, index) => {
+                              let margin_left = "margin-left : calc(100% * ";
+                              margin_left += graphUnit;
+                              margin_left += " / ";
+                              margin_left += user?.testReport?.timeline?.testVideoLength;
+                              margin_left += ");";
+                              document.write("<div class='unitBar' key='"+index+"' style='"+margin_left+"'>");
+                                document.write("<div>");
+                                  document.write((graphUnit / 60) * (index + 1));
+                                document.write("</div>");
+                                document.write("<div class='columnStick' key='"+index+"'></div>");
+                              document.write("</div>");
+                            });
+                          document.write("</div>");
+                          document.write("<div class='eventBarPart'>");
+                            user?.testReport?.timeline?.timelineTable?.map((value, index) => {
+                              let left = "left : calc( ";
+                              left += value?.startTime;
+                              left += "* 100% / ";
+                              left += user?.testReport?.timeline?.testVideoLength;
+                              left += ");";
+                              let width = " width : calc( 100% / ";
+                              width += user?.testReport?.timeline?.testVideoLength
+                              width += " * ( ";
+                              width += value?.endTime;
+                              width += " - ";
+                              width += value?.startTime;
+                              width += " ));";
+                              if(value?.level === "cheat") {
+                                document.write("<div id='StEventBar' class='eventCheat' style='"+left+width+"'>");
+                              } else {
+                                document.write("<div id='StEventBar' class='eventAbnormal' style='"+left+width+"'>");
+                              }
+                                  document.write("<div class='event'></div>");
+                                document.write("</div>");
+                            });
+                          document.write("</div>");
+                        document.write("</div>");
+                      document.write("</div>");
+                    document.write("</div>");
+                    document.write("<div class='rightShow'>");
+                      document.write("<div>View :&nbsp;&nbsp;</div>");
+                      document.write("<div class='viewall show'\
+                      onclick='setShow(this);'\
+                      >");
+                        document.write("All");
+                      document.write("</div>");
+                      document.write("<div class='greyColumn'></div>");
+                      document.write("<div class='viewcheating'\
+                      onclick='setShow(this);'\
+                      >");
+                        document.write("Urgent");
+                      document.write("</div>");
+                      document.write("<div class='greyColumn'></div>");
+                      document.write("<div class='viewabnormal'\
+                      onclick='setShow(this);'\
+                      >");
+                        document.write("Recommended");
+                      document.write("</div>");
+                    document.write("</div>");
+                    document.write("<div class='videoInfo'>");
+                      if(testVideo) {
+                        document.write("<video\
+                          id='video'\
+                          playsInline\
+                          preload='auto'\
+                          src='"+testVideo.videoUrl+"'\
+                          class='userVideo'\
+                          height='298px'\
+                          width='530px'\
+                          controls></video>");
+                      }
+                      document.write("<div class='cheatingList'>");
+                        // 전부 그리고 show 번호에 따라 display처리
+                        // show 1
+                        document.write("<div id='show1'>");
+                          if(user?.testReport?.timetable?.length !== 0) {
+                            document.write("<div id='scrollableContainer' class='videoLeftIn'>");
+                              drawTimeTableAction(user?.testReport?.timetable);
+                            document.write("</div>");
+                          } else {
+                            document.write("<div class='videoLeftInTwo'>");
+                              document.write("No issues detected!");
+                            document.write("</div>");
+                          }
+                        document.write("</div>");
+                        // show 2
+                        document.write("<div id='show2' style='display:none;'>");
+                          if(cheating?.length !== 0) {
+                            document.write("<div id='scrollableContainer' class='videoLeftIn'>");
+                              drawTimeTableAction(cheating);
+                            document.write("</div>");
+                          } else {
+                            document.write("<div class='videoLeftInTwo'>");
+                              document.write("No issues detected!");
+                            document.write("</div>");
+                          }
+                        document.write("</div>");
+                        // show 3
+                        document.write("<div id='show3' style='display:none;'>");
+                          if(abnormal?.length !== 0) {
+                            document.write("<div id='scrollableContainer' class='videoLeftIn'>");
+                              drawTimeTableAction(abnormal);
+                            document.write("</div>");
+                          } else {
+                            document.write("<div class='videoLeftInTwo'>");
+                              document.write("No issues detected!");
+                            document.write("</div>");
+                          }
+                        document.write("</div>");
+                        document.write("<div class='videoSharingButton'>");
+                          document.write("<img src='./img/reportSpecific/sharing.svg'></img>");
+                            document.write("<div id='shareButton'>");
+                              document.write("Share");
+                            document.write("</div>");
+                        document.write("</div>");
+                      document.write("</div>");
+                    document.write("</div>");
+                  document.write("</div>");  
+                }
+            </script>
+            <!-- Detected Issues End -->
+            <!-- Physical / Environmental Data Start -->
+            <script>
+              if(user?.testReport?.status !== "incompleteTest" &
+                user?.testReport?.status !== "uploadNotCompleted" &
+                user?.testReport?.status !== "errorCase") {
+                  document.write("<div class='detectedGraphBox'>");
+                    document.write("<div class='title'>");
+                      document.write("Physical / Environmental Data");
+                    document.write("</div>");
+                    document.write("<div class='bodyInfo'>");
+                      document.write("<div class='forBody'>");
+                        drawPhysical(user?.testReport?.analysis);
+                      document.write("</div>");
+                      drawGraph(user?.testReport?.analysis);
+                    document.write("</div>");
+                  document.write("</div>");
+                }
+            </script>
+            <!-- Physical / Environmental Data End -->
+            
+            <div class="environmentBucket">
+              <!-- Environment Scans Start -->
+              <div class="environmentForTestBox">
+                <div class="titlePart">
+                  <div class="title">
+                    Environment Scans
+                  </div>
+                  <script>
+                    if(settingPhoto?.aroundSetting?.reactivateTestPhotos?.length > 1) {
+                      document.write("<div class='filterForRetake'>");
+                        document.write("<div\
+                          id='retakeFilterItemOne'\
+                          class='retakeFilterItemOne show'\
+                          style='cursor:pointer;'\
+                          onclick='setEnvironmentFilter(1);'\
+                        >");
+                          document.write("Just before");
+                        document.write("</div>");
+                        document.write("<div class='middleBar'></div>");
+                        document.write("<div\
+                          id='retakeFilterItemTwo'\
+                          class='retakeFilterItemTwo'\
+                          style='cursor:pointer;'\
+                          onclick='setEnvironmentFilter(2);'\
+                        >");
+                          document.write("During the session");
+                        document.write("</div>");
+                      document.write("</div>");
+                    }
+                  </script>
+                </div>
+                <div class='photoPart'>
+                  <script>
+                    // Todo onclick Modal
+                    document.write("<img\
+                      id='envFilter1'\
+                      class='tempered'\
+                      style='cursor:pointer;'\
+                      src='"+settingPhoto?.aroundSetting?.preTestPhoto+"'\
+                      onclick=photoModalOn('Modal1');\
+                      alt=''\
+                    />");
+                    // Todo onclick Modal
+                    document.write("<img\
+                      id='envFilter2'\
+                      class='tempered'\
+                      style='cursor:pointer;display:none;'\
+                      src='"+settingPhoto?.aroundSetting?.reactivateTestPhotos?.[0]+"'\
+                      onclick=photoModalOn('Modal2');\
+                      alt=''\
+                    />");
+                    if(settingPhoto?.aroundSetting?.reactivateTestPhotos?.length > 1) {
+                      document.write("<div\
+                        id='envFilter2Count'\
+                        class='photoCount'\
+                        style='display:none;'\
+                      >");
+                        document.write("+ ");
+                        document.write(settingPhoto?.aroundSetting?.reactivateTestPhotos?.length - 1);
+                      document.write("</div>");
+                    }
+                  </script>
+                </div>
+                <script>
+                  if(settingPhoto?.aroundSetting?.isVerifiedEnvironment === false) {
+                    document.getElementById("envFilter1").classList.add('detected');
+                    document.getElementById("envFilter2").classList.add('detected');
+                    document.write("<div class='warningPart'>");
+                      document.write("<div class='warningText'>");
+                        document.write("**Prohibited item(s) detected.&nbsp;");
+                        document.write("Review and confirmation are required.");
+                      document.write("</div>");
+                      if(settingPhoto?.aroundSetting?.reactivateTestPhotos?.length > 1) {
+                        document.write("<div id='infoText' class='infoText' style='display:none;'>");
+                          document.write("* The images are sorted by the latest.");
+                        document.write("</div>");
+                      }
+                    document.write("</div>");
+                  }
+                </script>
+              </div>
+              <!-- Environment Scans End -->
+              <!-- Camera View Adjustment Start -->
+              <div class="environmentForTestBox">
+                <div class="titlePart">
+                  <div class="title">Camera View Adjustment</div>
+                  <script>
+                    if(settingPhoto?.cameraSetting?.reactivateTestPhotos?.length >= 1) {
+                      document.write("<div class='filterForRetake'>");
+                        document.write("<div\
+                          id='retakeFilterItemThree'\
+                          class='retakeFilterItemThree show'\
+                          style='cursor:pointer;'\
+                          onclick='setCameraSettingFilter(1);'\
+                        >");
+                          document.write("Just before");
+                        document.write("</div>");
+                        document.write("<div class='middleBar'></div>");
+                        document.write("<div\
+                          id='retakeFilterItemFour'\
+                          class='retakeFilterItemFour'\
+                          style='cursor:pointer;'\
+                          onclick='setCameraSettingFilter(2);'\
+                        >");
+                          document.write("During the session");
+                        document.write("</div>");
+                      document.write("</div>");
+                    }
+                  </script>
+                </div>
+                <div class="photoPart">
+                  <script>
+                    // Todo onclick Modal
+                    document.write("<img\
+                      id='cameraFilter1'\
+                      class='tempered'\
+                      style='cursor:pointer;'\
+                      src='"+settingPhoto?.cameraSetting?.preTestPhoto+"'\
+                      onclick=photoModalOn('Modal3');\
+                      alt=''\
+                    />");
+                    // Todo onclick Modal
+                    document.write("<img\
+                      id='cameraFilter2'\
+                      class='tempered'\
+                      style='cursor:pointer;display:none;'\
+                      src='"+settingPhoto?.cameraSetting?.reactivateTestPhotos?.[0]+"'\
+                      onclick=photoModalOn('Modal4');\
+                      alt=''\
+                    />");
+                    if(settingPhoto?.cameraSetting?.reactivateTestPhotos?.length > 1) {
+                      document.write("<div\
+                        id='cameraFilter2Count'\
+                        class='photoCount'\
+                        style='display:none;'\
+                      >");
+                        document.write("+ ");
+                        document.write(settingPhoto?.cameraSetting?.reactivateTestPhotos?.length - 1);
+                      document.write("</div>");
+                    }
+                  </script>
+                </div>
+                <div id="cameraFilter2Text" style="display:none;">
+                  * The images are sorted by the latest.
+                </div>
+              </div>
+              <!-- Camera View Adjustment End -->
+            </div>  
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+<script>
+  document.getElementById("arrow").addEventListener('click', function() {
+    // location.href='report.html?'+location.href.split('?')[1].split("&")[0];
+    location.href='report.html?'+reportNumber;
+  });
+  document.getElementById("userPhoto").src = "./img/reportSpecific/uploaderPhoto/"+reportNumber+"/"+targetNumber+"/face-photo.png";
+  document.getElementById("video").src = "./media/reportSpecific/"+reportNumber+"/"+targetNumber+"/combined_video.mp4";
+  document.getElementById("emailPart").href = 'mailto:'+ user?.testReport?.uploader?.uploaderEmail;
+</script>
+</html>
