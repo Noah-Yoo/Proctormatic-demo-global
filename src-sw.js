@@ -5,7 +5,7 @@ if (workbox) {
   console.log(`Yay! Workbox is loaded 🎉`);
 
   // 프리캐싱된 파일들
-  precacheAndRoute(self.__WB_MANIFEST, {
+  workbox.precaching.precacheAndRoute(self.__WB_MANIFEST, {
   // ignoreURLParametersMatching: [/.*/] // 모든 쿼리 파라미터 무시
   });
 
@@ -34,7 +34,7 @@ if (workbox) {
   self.addEventListener('activate', (event) => {
     event.waitUntil(self.clients.claim()); // 새로운 서비스 워커가 즉시 클라이언트를 제어하도록 설정
   });
-  
+
 } else {
   console.log(`Boo! Workbox didn't load 😬`);
 }
