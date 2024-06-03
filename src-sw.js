@@ -1,6 +1,6 @@
 importScripts(
-  'workbox/workbox-v7.1.0/workbox-sw.js',
-  'workbox/workbox-v7.1.0/workbox-precaching.prod.js'
+  '/Proctormatic-demo-global/workbox/workbox-v7.1.0/workbox-sw.js',
+  '/Proctormatic-demo-global/workbox/workbox-v7.1.0/workbox-precaching.prod.js'
 );
 
 if (workbox) {
