@@ -1,6 +1,6 @@
 {
-  "name": "ProctorMatic",
-  "short_name": "ProctorMatic",
+  "name": "Proctormatic",
+  "short_name": "Proctormatic",
   "start_url": "/index.html",
   "display": "standalone",
   "background_color": "#ffffff",
