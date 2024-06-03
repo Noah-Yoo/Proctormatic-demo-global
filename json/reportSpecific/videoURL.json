@@ -3,15 +3,15 @@ videoURL = [
     "report": [
       {
         "isSuccess": true,
-        "videoUrl": "/proctormatic-demo-global/media/reportSpecific/0/0/combined_video.mp4"
+        "videoUrl": "/Proctormatic-demo-global/media/reportSpecific/0/0/combined_video.mp4"
       },
       {
         "isSuccess": true,
-        "videoUrl": "/proctormatic-demo-global/media/reportSpecific/0/1/combined_video.mp4"
+        "videoUrl": "/Proctormatic-demo-global/media/reportSpecific/0/1/combined_video.mp4"
       },
       {
         "isSuccess": true,
-        "videoUrl": "/proctormatic-demo-global/media/reportSpecific/0/2/combined_video.mp4"
+        "videoUrl": "/Proctormatic-demo-global/media/reportSpecific/0/2/combined_video.mp4"
       },
     ]
   }

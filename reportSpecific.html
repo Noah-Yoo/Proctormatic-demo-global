@@ -3,20 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="/proctormatic-demo-global/css/global.css" />
-  <link rel="stylesheet" href="/proctormatic-demo-global/css/reportSpecificUp.css" />
-  <link rel="stylesheet" href="/proctormatic-demo-global/css/modal.css" />
-  <link rel="icon" sizes="16x16" href="/proctormatic-demo-global/img/favicon_16.png" />
-  <link rel="icon" sizes="32x32" href="/proctormatic-demo-global/img/favicon_32.png" />
-  <link rel="icon" sizes="96x96" href="/proctormatic-demo-global/img/favicon_96.png" />
-  <script src="/proctormatic-demo-global/json/reportSpecific/userData.json" type="text/javascript"></script>
-  <script src="/proctormatic-demo-global/json/reportSpecific/rawUserData.json" type="text/javascript"></script>
-  <script src="/proctormatic-demo-global/json/reportSpecific/uploaderList.json" type="text/javascript"></script>
-  <script src="/proctormatic-demo-global/json/reportSpecific/videoURL.json" type="text/javascript"></script>
-  <script src="/proctormatic-demo-global/json/reportSpecific/settingURL.json" type="text/javascript"></script>
-  <script src="/proctormatic-demo-global/js/function.js" type="text/javascript"></script>
-  <script src="/proctormatic-demo-global/js/physical.js" type="text/javascript"></script>
-  <script src="/proctormatic-demo-global/js/graph.js" type="text/javascript"></script>
+  <link rel="stylesheet" href="/Proctormatic-demo-global/css/global.css" />
+  <link rel="stylesheet" href="/Proctormatic-demo-global/css/reportSpecificUp.css" />
+  <link rel="stylesheet" href="/Proctormatic-demo-global/css/modal.css" />
+  <link rel="icon" sizes="16x16" href="/Proctormatic-demo-global/img/favicon_16.png" />
+  <link rel="icon" sizes="32x32" href="/Proctormatic-demo-global/img/favicon_32.png" />
+  <link rel="icon" sizes="96x96" href="/Proctormatic-demo-global/img/favicon_96.png" />
+  <script src="/Proctormatic-demo-global/json/reportSpecific/userData.json" type="text/javascript"></script>
+  <script src="/Proctormatic-demo-global/json/reportSpecific/rawUserData.json" type="text/javascript"></script>
+  <script src="/Proctormatic-demo-global/json/reportSpecific/uploaderList.json" type="text/javascript"></script>
+  <script src="/Proctormatic-demo-global/json/reportSpecific/videoURL.json" type="text/javascript"></script>
+  <script src="/Proctormatic-demo-global/json/reportSpecific/settingURL.json" type="text/javascript"></script>
+  <script src="/Proctormatic-demo-global/js/function.js" type="text/javascript"></script>
+  <script src="/Proctormatic-demo-global/js/physical.js" type="text/javascript"></script>
+  <script src="/Proctormatic-demo-global/js/graph.js" type="text/javascript"></script>
   <title>PROCTORMATIC</title>
   <script>
     const reportNumber = location.href.split('?')[1].split("&")[0];
@@ -1223,8 +1223,8 @@
     // location.href='report.html?'+location.href.split('?')[1].split("&")[0];
     location.href='report.html?'+reportNumber;
   });
-  document.getElementById("userPhoto").src = "/proctormatic-demo-global/img/reportSpecific/uploaderPhoto/"+reportNumber+"/"+targetNumber+"/face-photo.png";
-  document.getElementById("video").src = "/proctormatic-demo-global/media/reportSpecific/"+reportNumber+"/"+targetNumber+"/combined_video.mp4";
+  document.getElementById("userPhoto").src = "/Proctormatic-demo-global/img/reportSpecific/uploaderPhoto/"+reportNumber+"/"+targetNumber+"/face-photo.png";
+  document.getElementById("video").src = "/Proctormatic-demo-global/media/reportSpecific/"+reportNumber+"/"+targetNumber+"/combined_video.mp4";
   document.getElementById("emailPart").href = 'mailto:'+ user?.testReport?.uploader?.uploaderEmail;
 </script>
 </html>

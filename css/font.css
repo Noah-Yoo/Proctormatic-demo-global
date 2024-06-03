@@ -10,46 +10,46 @@
 
 @font-face {
     font-family: "Regular";
-    src: url("../font/Pretendard-Regular.woff2");
+    src: url("/css/");
   }
   
   @font-face {
     font-family: "extraLight";
-    src: url("../font/Pretendard-ExtraLight.woff2");
+    src: url("/Proctormatic-demo-global/font/Pretendard-ExtraLight.woff2");
   }
   
   @font-face {
     font-family: "Regular";
-    src: url("../font/Pretendard-Regular.woff2");
+    src: url("/Proctormatic-demo-global/font/Pretendard-Regular.woff2");
   }
   
   @font-face {
     font-family: "Light";
-    src: url("../font/Pretendard-Light.woff2");
+    src: url("/Proctormatic-demo-global/font/Pretendard-Light.woff2");
   }
   
   @font-face {
     font-family: "Medium";
-    src: url("../font/Pretendard-Medium.woff2");
+    src: url("/Proctormatic-demo-global/font/Pretendard-Medium.woff2");
   }
   
   @font-face {
     font-family: "semiBold";
-    src: url("../font/Pretendard-SemiBold.woff2");
+    src: url("/Proctormatic-demo-global/font/Pretendard-SemiBold.woff2");
   }
   
   @font-face {
     font-family: "Bold";
-    src: url("../font/Pretendard-Bold.woff2");
+    src: url("/Proctormatic-demo-global/font/Pretendard-Bold.woff2");
   }
   
   @font-face {
     font-family: "extraBold";
-    src: url("../font/Pretendard-ExtraBold.woff2");
+    src: url("/Proctormatic-demo-global/font/Pretendard-ExtraBold.woff2");
   }
   
   @font-face {
     font-family: "Black";
-    src: url("../font/Pretendard-Black.woff2");
+    src: url("/Proctormatic-demo-global/font/Pretendard-Black.woff2");
   }
   
