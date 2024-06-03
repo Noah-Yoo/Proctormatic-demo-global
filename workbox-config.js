@@ -1,7 +1,7 @@
 module.exports = {
   globDirectory: './',
   globPatterns: [
-    '**/*.{html,js,css,json,svg,png,woff2}'
+    '**/*.{html,js,css,json,svg,png,woff2,mp4}'
   ],
   swDest: 'service-worker.js',
   modifyURLPrefix: {
