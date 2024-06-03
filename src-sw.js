@@ -8,7 +8,7 @@ if (workbox) {
 
   // 프리캐싱된 파일들
   workbox.precaching.precacheAndRoute(self.__WB_MANIFEST, {
-  // ignoreURLParametersMatching: [/.*/] // 모든 쿼리 파라미터 무시
+    ignoreURLParametersMatching: [/.*/] // 모든 쿼리 파라미터 무시
   });
 
   self.addEventListener('install', (event) => {
