@@ -1,5 +1,7 @@
-// import { precacheAndRoute } from 'workbox-precaching';
-importScripts('https://storage.googleapis.com/workbox-cdn/releases/6.1.5/workbox-sw.js');
+importScripts(
+  'workbox/workbox-v7.1.0/workbox-sw.js',
+  'workbox/workbox-v7.1.0/workbox-precaching.prod.js'
+);
 
 if (workbox) {
   console.log(`Yay! Workbox is loaded 🎉`);
