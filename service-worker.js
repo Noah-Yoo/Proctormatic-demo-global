@@ -17,11 +17,13 @@ self.addEventListener('activate', (event) => {
 // fetch 이벤트 처리
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
+  console.log("요청 url: ", url);
   
   // 모든 HTML 파일에 대해 쿼리 파라미터를 무시하고 처리
   if (event.request.destination === 'document') {
     // 쿼리 파라미터를 제거한 URL을 생성
     const cacheUrl = new URL(url.origin + url.pathname);
+    console.log("제거한 url: ", cacheUrl);
     
     event.respondWith(
       caches.match(cacheUrl).then((response) => {
