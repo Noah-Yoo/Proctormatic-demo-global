@@ -428,13 +428,13 @@ function rawDataModalButton(button) {
     document.getElementById('rawDataModal').style.setProperty('display', 'none');
     scrollUnLock();
   } else if(button === 'OK') {
-    location.href = './reportSpecific.html?'+reportNumber+'&'+targetNumber+'&true';
+    location.href = '/proctormatic-demo-global/reportSpecific.html?'+reportNumber+'&'+targetNumber+'&true';
   }
 }
 
 function rawDataCheck(state) {
   if(state === 'checked') {
-    location.href = './reportSpecific.html?'+reportNumber+'&'+targetNumber+'&false';
+    location.href = '/proctormatic-demo-global/reportSpecific.html?'+reportNumber+'&'+targetNumber+'&false';
   } else if(state === 'unchecked'){
     document.getElementById('rawDataModal').style.removeProperty('display');
     // scrollLock
