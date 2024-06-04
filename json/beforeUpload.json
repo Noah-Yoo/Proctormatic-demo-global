@@ -1,24 +1,25 @@
 beforeUpload = {
   "isSuccess": true,
   "getTestVerifiedList": [
-      {
-        "testUuid": "",
-        "testName": " Natural Language Processing",
-        "testUploaded": 25,
-        "testStep": "beforeAnalysis",
-        "testStartTime": "2024-11-19 15:00",
-        "testEndTime": "2024-11-19 16:40",
-        "testFinishTime": "2024-11-21 17:00",
-      },
-      {
-        "testUuid": "",
-        "testName": " Financial Theory and Policy",
-        "testUploaded": 33,
-        "testStep": "analyzing",
-        "testVerifying": 62,
-        "testStartTime": "2024-10-10 09:00",
-        "testEndTime": "2024-10-10 09:30",
-        "testFinishTime": "2024-10-12 11:00",
+    {
+      "testUuid": "",
+      "testName": " Natural Language Processing",
+      "testUploaded": 25,
+      "testStep": "beforeAnalysis",
+      "testVerifying": 62,
+      "testStartTime": "2024-11-19 15:00",
+      "testEndTime": "2024-11-19 16:40",
+      "testFinishTime": "2024-11-21 17:00",
+    },
+    {
+      "testUuid": "",
+      "testName": " Financial Theory and Policy",
+      "testUploaded": 33,
+      "testStep": "analyzing",
+      "testVerifying": 62,
+      "testStartTime": "2024-10-10 09:00",
+      "testEndTime": "2024-10-10 09:30",
+      "testFinishTime": "2024-10-12 11:00",
     },
   ]
 }
