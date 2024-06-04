@@ -1,3 +1,14 @@
 waiting = {
-
+  "isSuccess": true,
+  "getTestPending": [
+    {
+      "testUuid": "",
+      "testName": " Data Analysis for Managers",
+      "testUploaded": 0,
+      "testStep": "beforeStart",
+      "testStartTime": "2024-03-11 15:00",
+      "testEndTime": "2024-03-11 17:00",
+      "testFinishTime": "-",
+    },
+  ]
 }
