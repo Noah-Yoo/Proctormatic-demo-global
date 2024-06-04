@@ -19,14 +19,14 @@
       var summary = JSON.parse(JSON.stringify(testSummary));
       var data = summary?.getTestSummary;
       var finish = JSON.parse(JSON.stringify(finishExam));
-      var fArr = finish.getTestVerifiedList;
-      var fLen = fArr.length;
+      var fArr = finish?.getTestVerifiedList;
+      var fLen = fArr?.length;
       var beforeUpload = JSON.parse(JSON.stringify(beforeUpload));
       var bArr = beforeUpload?.getTestVerifiedList;
-      var bLen = bArr.length;
+      var bLen = bArr?.length;
       var waiting = JSON.parse(JSON.stringify(waiting));
       var wArr = waiting?.getTestPending;
-      var wLen = wArr.length;
+      var wLen = wArr?.length;
     </script>
 </head>
 <body>

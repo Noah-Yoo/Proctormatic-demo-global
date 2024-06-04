@@ -24,15 +24,15 @@
     var tL = JSON.parse(JSON.stringify(testerList));
     var tester = tL[targetNumber].testerList;
     var detectList = tester?.detectList;
-    var dLen = detectList.length;
+    var dLen = detectList?.length;
     var normalList = tester?.normalList;
-    var nLen = normalList.length;
+    var nLen = normalList?.length;
     var notTakingList = tester?.notTakingList;
-    var nTLen = notTakingList.length;
+    var nTLen = notTakingList?.length;
     var analysisErrorList = tester?.analysisErrorList;
-    var aELen = analysisErrorList.length;
+    var aELen = analysisErrorList?.length;
     var midList = [...analysisErrorList, ...notTakingList];
-    var mLen = midList.length;
+    var mLen = midList?.length;
   </script>
 </head>
 <body>
