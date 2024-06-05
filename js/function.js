@@ -12,7 +12,7 @@ function setStep(testStep, testVerifying) {
       break;
     case "analyzing":
       // 추후 필요하면 Pending 불러오는것도 JSON 추가해서 변경
-      step = "Pending ("+testVerifying+"%)"
+      step = "Analyzing (" + testVerifying + "%)";
       break;
     case "afterAnalysis":
       step = "Completed";
